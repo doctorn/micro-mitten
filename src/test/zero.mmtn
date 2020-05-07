@@ -1,0 +1,5 @@
+// { "compile_status": "ok", "expectation": 0 }
+
+fn main() -> u64 {
+    0
+}

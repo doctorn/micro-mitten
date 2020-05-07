@@ -1,0 +1,10 @@
+// { "compile_status": "fail" }
+
+fn foo(a: u64, a: u64) -> u64 {
+    a
+}
+
+fn main() -> u64 {
+    let zero = 0;
+    zero
+}

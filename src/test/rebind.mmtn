@@ -1,0 +1,7 @@
+// { "compile_status": "ok", "expectation": 42 }
+
+fn main() -> u64 {
+    let n = 41;
+    let n = n + 1;
+    n
+}

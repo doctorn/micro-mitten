@@ -1,0 +1,9 @@
+// { "compile_status": "fail" }
+
+fn GC_malloc() -> u64 {
+    0
+}
+
+fn main() -> u64 {
+    GC_malloc()
+}

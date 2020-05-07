@@ -1,0 +1,21 @@
+// { "compile_status": "ok", "expectation": 42 }
+
+struct Foo {
+    bar: u64,
+}
+
+fn project(foo: Foo) -> u64 {
+    match foo {
+        Foo { bar: bar } => bar,
+    }
+}
+
+fn alias_unused(left: Foo, right: Foo) -> u64 {
+    // expect access to record this as a usage of `right`
+    project(left)
+}
+
+fn main() -> u64 {
+    let foo = Foo { bar: 42 };
+    alias_unused(foo, foo)
+}

@@ -1,0 +1,10 @@
+// { "compile_status": "fail" }
+
+struct Foo {
+    bar: u64,
+    bar: u64,
+}
+
+fn main() -> u64 {
+    0
+}

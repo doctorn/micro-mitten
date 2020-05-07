@@ -1,0 +1,53 @@
+// { "compile_status": "ok", "expectation": 1, "env": { "MITTEN_PROBLEM_SIZE": "100", "MITTEN_ITERS": "1" } }
+
+struct Node {
+    left: Tree,
+    right: Tree,
+}
+
+enum Tree {
+    Leaf(u64),
+    Node(Node),
+}
+
+fn tree_with_size(n: u64) -> Tree {
+    match n {
+        0 => Tree::Leaf(0),
+        _ => {
+            let sub_tree_size = n - 1;
+            Tree::Node(Node {
+                left: tree_with_size(sub_tree_size / 2),
+                right: tree_with_size(sub_tree_size - sub_tree_size / 2),
+            })
+        }
+    }
+}
+
+fn depth_first_size(tree: Tree) -> u64 {
+    match tree {
+        Tree::Leaf(_) => 0,
+        Tree::Node(node) => match node {
+            Node {
+                left: left,
+                right: right,
+            } => 1 + depth_first_size(left) + depth_first_size(right),
+        },
+    }
+}
+
+fn kernel() -> u64 {
+    let size = depth_first_size(tree_with_size(env!("MITTEN_PROBLEM_SIZE")));
+    size == env!("MITTEN_PROBLEM_SIZE")
+}
+
+fn iter(n: u64, acc: u64) -> u64 {
+    if n == 0 {
+        acc
+    } else {
+        kernel() & iter(n - 1, acc)
+    }
+}
+
+fn main() -> u64 {
+    iter(env!("MITTEN_ITERS"), 1)
+}

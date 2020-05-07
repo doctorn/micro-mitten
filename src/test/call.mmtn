@@ -1,0 +1,9 @@
+// { "compile_status": "ok", "expectation": 42 }
+
+fn add(a: u64, b: u64) -> u64 {
+    a + b
+}
+
+fn main() -> u64 {
+    add(20, 22)
+}

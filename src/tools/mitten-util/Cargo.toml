@@ -1,0 +1,10 @@
+[package]
+name = "mitten_util"
+version = "0.1.0"
+authors = ["Nathan Corbyn <me@nathancorbyn.com>"]
+edition = "2018"
+
+[dependencies]
+tempfile = "3.1.0"
+structopt = "0.2"
+serde = { version = "1.0.104", features = ["derive"] }

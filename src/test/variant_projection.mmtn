@@ -1,0 +1,12 @@
+// { "compile_status": "ok", "expectation": 42 }
+
+enum Foo {
+    Bar(u64),
+}
+
+fn main() -> u64 {
+    let foo = Foo::Bar(42);
+    match foo {
+        Foo::Bar(bar) => bar,
+    }
+}

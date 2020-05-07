@@ -1,0 +1,140 @@
+// { "compile_status": "ok", "expectation": 1, "env": { "MITTEN_PROBLEM_SIZE": "100", "MITTEN_ITERS": "1" } }
+
+struct Unit {}
+
+struct Cons {
+    head: u64,
+    tail: List,
+}
+
+enum List {
+    Nil(Unit),
+    Cons(Cons),
+}
+
+struct Pair {
+    left: List,
+    right: List,
+}
+
+fn list_with_len(n: u64) -> List {
+    match n {
+        0 => List::Nil(Unit {}),
+        _ => List::Cons(Cons {
+            head: n,
+            tail: list_with_len(n - 1),
+        }),
+    }
+}
+
+fn sorted(list: List) -> u64 {
+    match list {
+        List::Nil(_) => 1,
+        List::Cons(cons) => match cons {
+            Cons {
+                head: head,
+                tail: tail,
+            } => match tail {
+                List::Nil(_) => 1,
+                List::Cons(cons) => match cons {
+                    Cons {
+                        head: other_head,
+                        tail: _,
+                    } => (head <= other_head) & sorted(tail),
+                },
+            },
+        },
+    }
+}
+
+fn append(left: List, right: List) -> List {
+    match left {
+        List::Nil(_) => right,
+        List::Cons(cons) => match cons {
+            Cons {
+                head: head,
+                tail: tail,
+            } => List::Cons(Cons {
+                head: head,
+                tail: append(tail, right),
+            }),
+        },
+    }
+}
+
+fn partition(x: u64, list: List) -> Pair {
+    match list {
+        List::Nil(_) => Pair {
+            left: List::Nil(Unit {}),
+            right: List::Nil(Unit {}),
+        },
+        List::Cons(cons) => match cons {
+            Cons {
+                head: head,
+                tail: tail,
+            } => match partition(x, tail) {
+                Pair {
+                    left: left,
+                    right: right,
+                } => {
+                    if head <= x {
+                        Pair {
+                            left: List::Cons(Cons {
+                                head: head,
+                                tail: left,
+                            }),
+                            right: right,
+                        }
+                    } else {
+                        Pair {
+                            left: left,
+                            right: List::Cons(Cons {
+                                head: head,
+                                tail: right,
+                            }),
+                        }
+                    }
+                }
+            },
+        },
+    }
+}
+
+fn quick(list: List) -> List {
+    match list {
+        List::Nil(_) => List::Nil(Unit {}),
+        List::Cons(cons) => match cons {
+            Cons {
+                head: head,
+                tail: tail,
+            } => match partition(head, tail) {
+                Pair {
+                    left: left,
+                    right: right,
+                } => append(
+                    quick(left),
+                    List::Cons(Cons {
+                        head: head,
+                        tail: quick(right),
+                    }),
+                ),
+            },
+        },
+    }
+}
+
+fn kernel() -> u64 {
+    sorted(quick(list_with_len(env!("MITTEN_PROBLEM_SIZE"))))
+}
+
+fn iter(n: u64, acc: u64) -> u64 {
+    if n == 0 {
+        acc
+    } else {
+        kernel() & iter(n - 1, acc)
+    }
+}
+
+fn main() -> u64 {
+    iter(env!("MITTEN_ITERS"), 1)
+}

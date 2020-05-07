@@ -1,0 +1,18 @@
+[package]
+name = "mitten_rt"
+version = "0.1.0"
+authors = ["Nathan Corbyn <me@nathancorbyn.com>"]
+edition = "2018"
+
+[lib]
+name = "mitten_rt"
+crate-type = ["cdylib"]
+
+[dependencies]
+libc = "0.2.68"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"

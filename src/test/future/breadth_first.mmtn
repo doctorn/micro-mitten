@@ -1,0 +1,172 @@
+// { "compile_status": "ok", "expectation": 1, "ignore": true, "env": { "MITTEN_PROBLEM_SIZE": "5", "MITTEN_ITERS": "1" } }
+
+struct Node {
+    left: Tree,
+    right: Tree,
+}
+
+enum Tree {
+    Leaf(u64),
+    Node(Node),
+}
+
+struct Unit {}
+
+struct Cons {
+    head: Node,
+    tail: List,
+}
+
+enum List {
+    Nil(Unit),
+    Cons(Cons),
+}
+
+struct Queue {
+    front: List,
+    back: List,
+}
+
+struct Popped {
+    node: Node,
+    queue: Queue,
+}
+
+enum Option {
+    None(Unit),
+    Some(Popped),
+}
+
+fn rev(list: List, acc: List) -> List {
+    match list {
+        List::Nil(unit) => acc,
+        List::Cons(cons) => match cons {
+            Cons {
+                head: head,
+                tail: tail,
+            } => rev(
+                tail,
+                List::Cons(Cons {
+                    head: head,
+                    tail: acc,
+                }),
+            ),
+        },
+    }
+}
+
+fn empty() -> Queue {
+    Queue {
+        front: List::Nil(Unit {}),
+        back: List::Nil(Unit {}),
+    }
+}
+
+fn flip(queue: Queue) -> Queue {
+    match queue {
+        Queue {
+            front: _,
+            back: back,
+        } => Queue {
+            front: rev(back, List::Nil(Unit {})),
+            back: List::Nil(Unit {}),
+        },
+    }
+}
+
+fn pop(queue: Queue) -> Option {
+    match queue {
+        Queue {
+            front: front,
+            back: back,
+        } => match front {
+            List::Cons(cons) => match cons {
+                Cons {
+                    head: head,
+                    tail: tail,
+                } => Option::Some(Popped {
+                    node: head,
+                    queue: Queue {
+                        front: tail,
+                        back: back,
+                    },
+                }),
+            },
+            _ => match back {
+                List::Nil(unit) => Option::None(unit),
+                _ => pop(flip(queue)),
+            },
+        },
+    }
+}
+
+fn push(queue: Queue, node: Node) -> Queue {
+    match queue {
+        Queue {
+            front: front,
+            back: back,
+        } => Queue {
+            front: front,
+            back: List::Cons(Cons {
+                head: node,
+                tail: back,
+            }),
+        },
+    }
+}
+
+fn push_tree(queue: Queue, tree: Tree) -> Queue {
+    match tree {
+        Tree::Node(node) => push(queue, node),
+        _ => queue,
+    }
+}
+
+fn tree_with_size(n: u64) -> Tree {
+    match n {
+        0 => Tree::Leaf(0),
+        _ => {
+            let sub_tree_size = n - 1;
+            Tree::Node(Node {
+                left: tree_with_size(sub_tree_size / 2),
+                right: tree_with_size(sub_tree_size - sub_tree_size / 2),
+            })
+        }
+    }
+}
+
+fn breadth_first_size(queue: Queue) -> u64 {
+    match pop(queue) {
+        Option::Some(popped) => match popped {
+            Popped {
+                node: node,
+                queue: queue,
+            } => match node {
+                Node {
+                    left: left,
+                    right: right,
+                } => 1 + breadth_first_size(push_tree(push_tree(queue, left), right)),
+            },
+        },
+        _ => 0,
+    }
+}
+
+fn kernel() -> u64 {
+    let tree = tree_with_size(env!("MITTEN_PROBLEM_SIZE"));
+    let queue = push_tree(empty(), tree);
+    let size = breadth_first_size(queue);
+    size == env!("MITTEN_PROBLEM_SIZE")
+}
+
+fn iter(n: u64, acc: u64) -> u64 {
+    if n == 0 {
+        acc
+    } else {
+        kernel() & iter(n - 1, acc)
+    }
+}
+
+fn main() -> u64 {
+    iter(env!("MITTEN_ITERS"), 1)
+}

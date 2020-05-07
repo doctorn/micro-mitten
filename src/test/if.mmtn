@@ -1,0 +1,9 @@
+// { "compile_status": "ok", "expectation": 4 }
+
+fn main() -> u64 {
+    if 0 {
+        3
+    } else {
+        4
+    }
+}

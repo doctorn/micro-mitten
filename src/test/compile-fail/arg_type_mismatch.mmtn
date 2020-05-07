@@ -1,0 +1,12 @@
+// { "compile_status": "fail" }
+
+struct Unit {}
+
+fn foo(n: u64) -> u64 {
+    n
+}
+
+fn main() -> u64 {
+    let n = foo(Unit {});
+    n
+}

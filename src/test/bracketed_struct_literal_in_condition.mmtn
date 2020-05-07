@@ -1,0 +1,9 @@
+// { "compile_status": "ok", "expectation": 42 }
+
+struct Unit {}
+
+fn main() -> u64 {
+    match (Unit {}) {
+        Unit {} => 42,
+    }
+}

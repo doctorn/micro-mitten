@@ -1,0 +1,17 @@
+[package]
+name = "micro_mitten"
+version = "0.1.0"
+authors = ["Nathan Corbyn <me@nathancorbyn.com>"]
+edition = "2018"
+
+[[bin]]
+name = "mmtnc"
+path = "src/main.rs"
+
+[dependencies]
+log = "0.4.8"
+env_logger = "0.7.1"
+structopt = "0.2"
+codespan = "0.5.0"
+codespan-reporting = "0.5.0"
+inkwell = { git = "https://github.com/TheDan64/inkwell", branch = "llvm8-0" }

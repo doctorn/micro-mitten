@@ -1,0 +1,12 @@
+// { "compile_status": "ok", "expectation": 42 }
+
+struct Foo {
+    bar: u64,
+}
+
+fn main() -> u64 {
+    let foo = Foo { bar: 42 };
+    match foo {
+        Foo { bar: bar } => bar,
+    }
+}

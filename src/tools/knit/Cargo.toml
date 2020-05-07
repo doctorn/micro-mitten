@@ -1,0 +1,14 @@
+[package]
+name = "knit"
+version = "0.1.0"
+authors = ["Nathan Corbyn <me@nathancorbyn.com>"]
+edition = "2018"
+
+[[bin]]
+name = "knit"
+path = "src/main.rs"
+
+[dependencies]
+mitten_util = { path = "../mitten-util/" }
+structopt = "0.2"
+termion = "1.5.4"

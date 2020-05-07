@@ -1,0 +1,57 @@
+language: rust
+
+rust:
+  - stable
+  - beta
+  - nightly
+jobs:
+  allow_failures:
+    - rust: nightly
+  fast_finish: true
+
+os:
+  - linux
+dist: trusty
+sudo: required
+cache:
+  directories:
+    - /home/travis/.cargo
+
+addons:
+  apt:
+    sources:
+      - sourceline: "ppa:ubuntu-toolchain-r/test"
+      - sourceline: "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-8 main"
+    packages:
+      - libelf-dev
+      - lib32z1-dev
+      - libedit-dev
+      - libdw-dev
+      - binutils-dev
+      - libiberty-dev
+      - libssl-dev
+      - libgc-dev
+      - libjemalloc-dev
+
+before_install:
+  - sudo -E apt-get -yq --no-install-suggests --no-install-recommends --allow-unauthenticated install llvm-8-dev
+  - export LLVM_VERSION_DASH=${LLVM_VERSION/./-}
+  - export LLVM_VERSION_SHORT=${LLVM_VERSION/./}
+  - export PATH=/usr/lib/llvm-${LLVM_VERSION}/bin/:$HOME/.local/bin:$PATH
+  - export LLVM_PATH=/usr/share/llvm-${LLVM_VERSION}/cmake/
+
+install:
+  - cargo install --path ./src/tools/mitten-test/ --force
+  - cd ./src/rt/
+  - rustup override set nightly
+  - cargo build --verbose --release
+  - cd ../../
+  - sudo cp ./src/rt/target/release/libmitten_rt.so /lib/
+
+cache: cargo
+
+script:
+  - cargo build --verbose --release
+  - mitten-test -v --build ./target/release/mmtnc --path ./src/test/ --gc-strategy=none
+  - mitten-test -v --build ./target/release/mmtnc --path ./src/test/ --gc-strategy=proust
+  - mitten-test -v --build ./target/release/mmtnc --path ./src/test/ --gc-strategy=bdw

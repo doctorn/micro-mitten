@@ -1,0 +1,9 @@
+// { "compile_status": "fail" }
+
+fn free() -> u64 {
+    0
+}
+
+fn main() -> u64 {
+    free()
+}

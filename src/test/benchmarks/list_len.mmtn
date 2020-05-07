@@ -1,0 +1,52 @@
+// { "compile_status": "ok", "expectation": 1, "env": { "MITTEN_PROBLEM_SIZE": "100", "MITTEN_ITERS": "1" } }
+
+struct Unit {}
+
+struct Cons {
+    head: u64,
+    tail: List,
+}
+
+enum List {
+    Nil(Unit),
+    Cons(Cons),
+}
+
+fn list_with_len(n: u64) -> List {
+    match n {
+        0 => List::Nil(Unit {}),
+        _ => List::Cons(Cons {
+            head: 1,
+            tail: list_with_len(n - 1),
+        }),
+    }
+}
+
+fn len(list: List) -> u64 {
+    match list {
+        List::Cons(cons) => match cons {
+            Cons {
+                head: _,
+                tail: tail,
+            } => len(tail) + 1,
+        },
+        _ => 0,
+    }
+}
+
+fn kernel() -> u64 {
+    let len = len(list_with_len(env!("MITTEN_PROBLEM_SIZE")));
+    len == env!("MITTEN_PROBLEM_SIZE")
+}
+
+fn iter(n: u64, acc: u64) -> u64 {
+    if n == 0 {
+        acc
+    } else {
+        kernel() & iter(n - 1, acc)
+    }
+}
+
+fn main() -> u64 {
+    iter(env!("MITTEN_ITERS"), 1)
+}

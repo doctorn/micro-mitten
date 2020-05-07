@@ -1,0 +1,21 @@
+// { "compile_status": "ok", "expectation": 42 }
+
+struct Foo {
+    bar: u64,
+}
+
+fn project(foo: Foo) -> u64 {
+    match foo {
+        Foo { bar: bar } => bar,
+    }
+}
+
+// expect shape summary to show aliasing here
+fn alias(left: Foo, right: Foo) -> u64 {
+    project(left) + project(right)
+}
+
+fn main() -> u64 {
+    let foo = Foo { bar: 21 };
+    alias(foo, foo)
+}

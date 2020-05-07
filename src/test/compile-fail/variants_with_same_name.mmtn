@@ -1,0 +1,10 @@
+// { "compile_status": "fail" }
+
+enum Foo {
+    Bar(u64),
+    Bar(u64),
+}
+
+fn main() -> u64 {
+    0
+}

@@ -1,0 +1,16 @@
+// { "compile_status": "ok", "expectation": 42 }
+
+struct Unit {}
+
+enum Foo {
+    Bar(Unit),
+    Baz(u64),
+}
+
+fn main() -> u64 {
+    let foo = Foo::Baz(42);
+    match foo {
+        Foo::Bar(_) => 43,
+        Foo::Baz(baz) => baz,
+    }
+}

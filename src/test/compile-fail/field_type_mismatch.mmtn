@@ -1,0 +1,12 @@
+// { "compile_status": "fail" }
+
+struct Unit {}
+
+struct Foo {
+    field: u64,
+}
+
+fn main() -> u64 {
+    let foo = Foo { field: Unit {} };
+    0
+}
