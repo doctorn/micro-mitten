@@ -31,6 +31,6 @@ The `--gc-strategy` argument is optional, but the default is to use *no* garbage
 
 ## Notes
 
-To get an idea of the language syntax, check out the examples in `src/test/`. If you get something wrong, the compiler shoud moan at you. Otherwise, please open an issue!
+To get an idea of the language syntax, check out the examples in `src/test/`. If you get something wrong, the compiler should moan at you. Otherwise, please open an issue!
 
 Please note, `micro-mitten` is purely a research language and its performance is not brilliant when using static memory management. For a full run-down, see [my dissertation](http://nathancorbyn.com/nc513.pdf). Most of the examples in `src/test/` will run with static memory management, but there are some notable exceptions and one or two memory leaks.
